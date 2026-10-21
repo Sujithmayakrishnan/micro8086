@@ -110,6 +110,22 @@ footer{margin-top:30px;border-top:1px solid var(--ink);padding-top:10px;font-siz
 .qno{display:inline-block;border:2px solid #000;padding:0 8px;margin-right:6px;font-weight:bold}
 section.q.small{padding:10px 14px 12px}
 .ins{font-size:1.15rem;font-weight:bold;background:var(--soft);border:1px solid var(--ink);padding:6px 10px;margin:6px 0 8px;display:inline-block}
+/* section colours */
+body{--sec:#000;--sect:#f2f2f2;--key:#c62828;--keybg:#fdecea}
+.seg button.catbtn{border:2px solid var(--c);color:var(--c);background:var(--t);font-weight:bold}
+.seg button.catbtn[aria-pressed="true"]{background:var(--c);color:#fff;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.paperhead{border-color:var(--sec);background:var(--sect)}
+.paperhead .t{color:var(--sec)}
+section.q{border-color:var(--sec);border-left-width:6px}
+.qno{border-color:var(--sec);background:var(--sec);color:#fff}
+section.q h2 i{color:var(--sec)}
+.btn.primary{background:var(--sec);border-color:var(--sec)}
+/* answers in red */
+.keyline,.keyline b,.blankkeys,.blankkeys b,.reason,.reason b,.model>b,.model .rubric{color:var(--key)}
+.blankkeys{border-top-color:var(--key)}
+.reason{border-left-color:var(--key);background:var(--keybg)}
+.model pre.code{color:var(--key);background:var(--keybg);border-color:var(--key)}
+.model img{border-color:var(--key)}
 </style>
 </head>
 <body>
@@ -118,7 +134,8 @@ section.q.small{padding:10px 14px 12px}
     <div class="uni">Sanjivani University</div>
     <div class="course">Integrated B.Tech · 25UIDMD206 – Microprocessor Programming and Applications</div>
     <h1>8086 Microprocessor Lab — Question Bank for Self-Practice</h1>
-     </header>
+    <div class="course">Experiments 1–12 · all questions grouped by type</div>
+  </header>
 
   <nav class="picker" aria-label="Sections">
     <div class="grp">
@@ -1292,11 +1309,11 @@ const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
 
 /* ---------- build one merged, categorised question bank ---------- */
 const CATS = [
-  {type:'fill',    name:'Fill in the blanks',  short:'Fill blanks', marks:4},
-  {type:'predict', name:'Predict the output',  short:'Predict output', marks:4},
-  {type:'debug',   name:'Debug the errors',    short:'Debug', marks:1},
-  {type:'correct', name:'Correct the errors',  short:'Correct errors', marks:4},
-  {type:'write',   name:'Write the program',   short:'Write program', marks:4}
+  {type:'fill',    name:'Fill in the blanks',  short:'Fill blanks', marks:4, color:'#1565c0', tint:'#e3f0fc'},
+  {type:'predict', name:'Predict the output',  short:'Predict output', marks:4, color:'#2e7d32', tint:'#e6f4e7'},
+  {type:'debug',   name:'Debug the errors',    short:'Debug', marks:1, color:'#e65100', tint:'#fdeee2'},
+  {type:'correct', name:'Correct the errors',  short:'Correct errors', marks:4, color:'#6a1b9a', tint:'#f3e8f8'},
+  {type:'write',   name:'Write the program',   short:'Write program', marks:4, color:'#00695c', tint:'#e0f2ef'}
 ];
 const AUTO = new Set(['fill','predict','correct']);
 
@@ -1339,6 +1356,7 @@ function renderPicker(){
     const b = document.createElement('button'); b.type = 'button';
     b.innerHTML = `${i + 1}. ${esc(c.name)} <span class="cnt">(${BANK[c.type].length})</span>`;
     b.setAttribute('aria-pressed', i === catIdx);
+    b.className = 'catbtn'; b.style.setProperty('--c', c.color); b.style.setProperty('--t', c.tint);
     b.onclick = () => { catIdx = i; state.cat = i; save(); go(); };
     seg.appendChild(b);
   });
@@ -1538,6 +1556,8 @@ $('#clearSet').onclick = () => {
 $('#printBtn').onclick = () => window.print();
 
 function go(){
+  document.body.style.setProperty('--sec', CATS[catIdx].color);
+  document.body.style.setProperty('--sect', CATS[catIdx].tint);
   renderPicker(); render();
   $('#showAll').textContent = 'Show all answers';
   window.scrollTo({top:0});
